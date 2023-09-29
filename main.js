@@ -22,7 +22,7 @@ function getApiInfo () {
     fetch(url)
     .then((response) => response.json())
     .then(dataApi => {       
-        console.log(dataApi);
+        //console.log(dataApi);
         //pintar un listado
         seriesSearch = dataApi;   
         renderSeriesList (seriesSearch);
@@ -30,11 +30,23 @@ function getApiInfo () {
 }
 
 //PINTA ESTRUCTURA SERIE
-function renderSeries(oneSerie){
+function renderSeries(serie){
     let html="";
-    html+=`<h3>${oneSerie.show.name}</h3>`;
+    
     html+=`<ul class="serie">`;
-    html+=`<img src`
+    
+    //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
+    if (serie.show.image !== null){
+        html+=`<li>
+        <h3>${serie.show.name}</h3>
+        <img src="${serie.show.image.medium}" alt="${serie.show.name}"/>
+        </li>`
+      }else{
+        html+= `<li>
+        <h3>${serie.show.name}</h3>
+        <img src="https://via.placeholder.com/210x295/ffffff/666666/?text=TV" alt="${serie.show.name}"/>
+        </li>`;
+      }
     html+=`</ul>`
     return html;
 }
@@ -42,20 +54,17 @@ function renderSeries(oneSerie){
 //PINTAR LISTADO CON BUCLES
 function renderSeriesList (listSeries){
     console.log(listSeries);
-    for (const oneSerie of listSeries) {
-        listSearch.innerHTML+= renderSeries(oneSerie)
+    for (const serie of listSeries) {
+        listSearch.innerHTML+= renderSeries(serie)
     }
 }
 
-
-
 function handleClickSearch(event) {
     event.preventDefault();
-    //llamar info de API 
+    //devuelveme la info de API 
     getApiInfo ();
 };
 
 
-//eventos
-
+//EVENTO SOBRE BOTÓN DE BUSCAR
 btnSearch.addEventListener('click', handleClickSearch);

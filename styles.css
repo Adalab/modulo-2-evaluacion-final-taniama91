@@ -5,8 +5,48 @@
 }
 :root{
     font-size: 62.5%;
+    
 }
 .body{
-    font-size: 3rem;
+    font-size: 2rem;
     margin: 50px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.header-container{
+    margin: 20px;
+    text-transform: uppercase;
+}
+.main{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 25rem;
+    }
+.titlefav{
+    margin-bottom: 20px;
+}
+.titlesearch{
+    margin-bottom: 20px;
+  
+
+}
+.section-fav{
+    font-size: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid salmon;
+    text-transform: uppercase
+}
+.section-search{
+    font-size: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-bottom: 1px solid salmon;
+    text-transform: uppercase
+}
+.serie{
+    text-transform: uppercase;
+    font-size: 2rem;
 }
