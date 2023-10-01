@@ -9,14 +9,14 @@ const listFav = document.querySelector('.js-list-fav'); //lista favoritas
 const listSearch =document.querySelector('.js-list-search'); //lista con la busqueda
 
 
-
 //ARRAYS VACIOS
 let seriesSearch = []; 
 let seriesFav = [];
 
+
 //PEDIR INFO A LA API
 function getApiInfo () {
-    const valueInput = inputSearch.value;    
+    const valueInput = inputSearch.value;   
         //URL API + VALOR INTRODUCIDO EN EL INPUT
     const url =`//api.tvmaze.com/search/shows?q=${valueInput}`
     fetch(url)
@@ -32,12 +32,12 @@ function getApiInfo () {
 function renderSeries(serie){
     let html="";
     //añade el id de cada serie a cada ul
-    html+=`<ul id=${serie.show.id} class="serie js-serie">`; 
+    html+=`<ul id=${serie.show.id} class="serie stylecard js-serie">`; 
     //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
     if (serie.show.image !== null){
-        html+=`<li>
-        <h3>${serie.show.name}</h3>
-        <img src="${serie.show.image.medium}" alt="${serie.show.name}"/>
+        html+=`<li">
+        <h3 class="">${serie.show.name}</h3>
+        <img class="img" src="${serie.show.image.medium}" alt="${serie.show.name}"/>
         </li>`
       }else{
         html+= `<li>
@@ -51,13 +51,15 @@ function renderSeries(serie){
 
 //PINTAR LISTADO CON BUCLES
 function renderSeriesList (listSeries){
-    console.log(listSeries);
+    //para que no se me acumulen las busquedas (linea inferior)
+    listSearch.innerHTML ="";
     for (const serie of listSeries) {
         listSearch.innerHTML+= renderSeries(serie)
     }
     /*llamo a la funcion addEventToSerie para que me pinte las series (lo hago aqui porque es donde me pinta las series y si lo pongo debajo del evento del boton de buscar me sale vacio, ya que EL FETCH TODAVIA NO ME HA DEVUELTO LA INFO Y aun no tengo pintadas las series)*/
     addEventToSerie();
 }
+
 
 //FUNCIÓN SOBRE EL BOTÓN DE BUSCAR
 function handleClickSearch(event) {
@@ -66,14 +68,39 @@ function handleClickSearch(event) {
     getApiInfo ();
 };
 
+//FUNCION PARA PINTAR LAS FAVORITAS
+function renderSerieFav (favSeries){
+     //para que no se me acumulen las busquedas (linea inferior)
+    listFav.innerHTML ="";
+    for (const item of favSeries) {
+        listFav.innerHTML += renderSeries(item)
+    }
+}
+
 //FUNCION SOBRE AÑADIR A FAVORITOS
 function handleClickFav(event){
 //la ul es quien escucha el evento ya que he hecho un qsAll sobre la ul
-console.log(event.currentTarget.id);
 const idSerieCliked = parseInt(event.currentTarget.id);
 //buscar la serie por id para saber en cual he dado click
 const foundSerie = seriesSearch.find(item => item.show.id === idSerieCliked); 
-console.log(foundSerie);
+
+//comprueba si esta en el listado (findIndex busca la posicion de un elemento en una lista. -1 no esta) 
+const indexFav = seriesFav.findIndex(item => item.show.id === idSerieCliked);
+//si no esta lo añade(push)
+if (indexFav === -1){
+    seriesFav.push(foundSerie);
+}else{
+//si esta lo quita (posicionaeliminar, cuantosquieroeliminar)
+seriesFav.splice(indexFav, 1)
+}
+
+//AÑADIR (PINTAR) LAS SERIES A FAVORITAS en html
+console.log(listFav);
+renderSerieFav(seriesFav);
+
+
+//guarda el listado dee favoritas
+localStorage.setItem('favorites', JSON.stringify(seriesFav));
 }
 
 /*FUNCION PARA OBTENER TODAS LAS SERIES QUE HE BUSCADO (qsAll porque no se cuantas tengo en total, ya que la info viene del servidor)*/
@@ -85,8 +112,6 @@ for (const item of allSeries) {
     item.addEventListener('click', handleClickFav)
 }
 }
-
-//FUNCION PARA AÑADIR LAS SERIES A FAVORITAS
 
 
 //EVENTO SOBRE BOTÓN DE BUSCAR
