@@ -13,6 +13,7 @@ const listSearch =document.querySelector('.js-list-search'); //lista con la busq
 let seriesSearch = []; 
 let seriesFav = [];
 
+const seriesLS = JSON.parse(localStorage.getItem("favorites"));
 
 //PEDIR INFO A LA API
 function getApiInfo () {
@@ -31,21 +32,19 @@ function getApiInfo () {
 //PINTA ESTRUCTURA SERIE
 function renderSeries(serie){
     let html="";
-    //añade el id de cada serie a cada ul
-    html+=`<ul id=${serie.show.id} class="serie stylecard js-serie">`; 
+    //añade el id de cada serie a cada li
+    html+=`<li id=${serie.show.id} class="serie stylecard js-serie">`; 
     //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
-    if (serie.show.image !== null){
-        html+=`<li">
-        <h3 class="">${serie.show.name}</h3>
-        <img class="img" src="${serie.show.image.medium}" alt="${serie.show.name}"/>
-        </li>`
+        if (serie.show.image !== null){
+        html+=`<h3 class="">${serie.show.name}</h3>
+        <img class="img" src="${serie.show.image.medium}" alt="${serie.show.name}"/>`
       }else{
         html+= `<li>
         <h3>${serie.show.name}</h3>
         <img src="https://via.placeholder.com/210x295/ffffff/666666/?text=TV" alt="${serie.show.name}"/>
         </li>`;
       }
-    html+=`</ul>`
+    html+=`</li>`
     return html;
 }
 
@@ -75,6 +74,7 @@ function renderSerieFav (favSeries){
     for (const item of favSeries) {
         listFav.innerHTML += renderSeries(item)
     }
+
 }
 
 //FUNCION SOBRE AÑADIR A FAVORITOS
@@ -97,7 +97,9 @@ seriesFav.splice(indexFav, 1)
 //AÑADIR (PINTAR) LAS SERIES A FAVORITAS en html
 console.log(listFav);
 renderSerieFav(seriesFav);
-
+//cambia colores
+event.currentTarget.classList.add("stylecardfav");
+event.currentTarget.classList.remove("stylecard");   
 
 //guarda el listado dee favoritas
 localStorage.setItem('favorites', JSON.stringify(seriesFav));
@@ -112,7 +114,6 @@ for (const item of allSeries) {
     item.addEventListener('click', handleClickFav)
 }
 }
-
 
 //EVENTO SOBRE BOTÓN DE BUSCAR
 btnSearch.addEventListener('click', handleClickSearch);
