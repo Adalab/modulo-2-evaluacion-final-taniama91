@@ -105,3 +105,7 @@
     margin-top: 10px; 
     background-color: lightblue;
 }
+.delete{
+    border-radius: 10px;
+    padding: 3px;
+}

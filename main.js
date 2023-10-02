@@ -6,14 +6,16 @@
 const inputSearch = document.querySelector('.js-input-search'); //casilla buscar
 const btnSearch = document.querySelector('.js-btn-search'); // boton buscar
 const listFav = document.querySelector('.js-list-fav'); //lista favoritas
-const listSearch =document.querySelector('.js-list-search'); //lista con la busqueda
+const listSearch = document.querySelector('.js-list-search'); //lista con la busqueda
+const btnDelete = document.querySelector('.js-delete'); //botón reset
 
 
 //ARRAYS VACIOS
 let seriesSearch = []; 
 let seriesFav = [];
 
-const seriesLS = JSON.parse(localStorage.getItem("favorites"));
+seriesFav = JSON.parse(localStorage.getItem("favorites"));
+renderSerieFav (seriesFav);
 
 //PEDIR INFO A LA API
 function getApiInfo () {
@@ -32,6 +34,7 @@ function getApiInfo () {
 //PINTA ESTRUCTURA SERIE
 function renderSeries(serie){
     let html="";
+
     //añade el id de cada serie a cada li
     html+=`<li id=${serie.show.id} class="serie stylecard js-serie">`; 
     //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
@@ -54,6 +57,7 @@ function renderSeriesList (listSeries){
     listSearch.innerHTML ="";
     for (const serie of listSeries) {
         listSearch.innerHTML+= renderSeries(serie)
+
     }
     /*llamo a la funcion addEventToSerie para que me pinte las series (lo hago aqui porque es donde me pinta las series y si lo pongo debajo del evento del boton de buscar me sale vacio, ya que EL FETCH TODAVIA NO ME HA DEVUELTO LA INFO Y aun no tengo pintadas las series)*/
     addEventToSerie();
@@ -89,19 +93,20 @@ const indexFav = seriesFav.findIndex(item => item.show.id === idSerieCliked);
 //si no esta lo añade(push)
 if (indexFav === -1){
     seriesFav.push(foundSerie);
+    //ºcambia color
+    event.currentTarget.classList.add("stylecardfav");
 }else{
 //si esta lo quita (posicionaeliminar, cuantosquieroeliminar)
 seriesFav.splice(indexFav, 1)
+//cambia color
+event.currentTarget.classList.remove("stylecard"); 
 }
 
 //AÑADIR (PINTAR) LAS SERIES A FAVORITAS en html
 console.log(listFav);
-renderSerieFav(seriesFav);
-//cambia colores
-event.currentTarget.classList.add("stylecardfav");
-event.currentTarget.classList.remove("stylecard");   
+renderSerieFav(seriesFav);  
 
-//guarda el listado dee favoritas
+//guarda el listado de favoritas
 localStorage.setItem('favorites', JSON.stringify(seriesFav));
 }
 
@@ -114,7 +119,15 @@ for (const item of allSeries) {
     item.addEventListener('click', handleClickFav)
 }
 }
+//FUNCIÓN PARA BORRAR TODAS LAS FAVORITAS
+function handleCLickDelete(){
+    seriesFav = [];
+    localStorage.removeItem('seriesFav');
+    renderSerieFav(seriesFav);
+}
 
+//EVENTO SOBRE BOTÓN RESET
+btnDelete.addEventListener('click', handleCLickDelete);
 //EVENTO SOBRE BOTÓN DE BUSCAR
 btnSearch.addEventListener('click', handleClickSearch);
 
