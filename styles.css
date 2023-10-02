@@ -30,10 +30,12 @@
 .input-search{
     padding: 10px;
     border-radius: 10px;
+    border-color:cornflowerblue;
 }
 .btn-search{
     padding: 5px;
     border-radius: 10px;
+    border-color:cornflowerblue;
 }
 .main{
     display: flex;
@@ -108,4 +110,5 @@
 .delete{
     border-radius: 10px;
     padding: 3px;
+    border-color:cornflowerblue;
 }

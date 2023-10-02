@@ -14,7 +14,10 @@ const btnDelete = document.querySelector('.js-delete'); //botón reset
 let seriesSearch = []; 
 let seriesFav = [];
 
-seriesFav = JSON.parse(localStorage.getItem("favorites"));
+const seriesLS = JSON.parse(localStorage.getItem("favorites"));
+if (seriesLS !== null){
+    seriesFav=seriesLS;
+}
 renderSerieFav (seriesFav);
 
 //PEDIR INFO A LA API
@@ -34,8 +37,22 @@ function getApiInfo () {
 //PINTA ESTRUCTURA SERIE
 function renderSeries(serie){
     let html="";
-
-    //añade el id de cada serie a cada li
+    if (serie in seriesFav){
+          //añade el id de cada serie a cada li
+    html+=`<li id=${serie.show.id} class="serie stylecard stylecardfav js-serie">`; 
+    //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
+        if (serie.show.image !== null){
+        html+=`<h3 class="">${serie.show.name}</h3>
+        <img class="img" src="${serie.show.image.medium}" alt="${serie.show.name}"/>`
+      }else{
+        html+= `<li>
+        <h3>${serie.show.name}</h3>
+        <img src="https://via.placeholder.com/210x295/ffffff/666666/?text=TV" alt="${serie.show.name}"/>
+        </li>`;
+      }
+    html+=`</li>`  
+    }else{
+          //añade el id de cada serie a cada li
     html+=`<li id=${serie.show.id} class="serie stylecard js-serie">`; 
     //CONDICIONAL QUE ME DEVUELVE LA FOTO Y SI NO TIENE ME PONE UNA IMAGEN DE RELLENO
         if (serie.show.image !== null){
@@ -47,7 +64,9 @@ function renderSeries(serie){
         <img src="https://via.placeholder.com/210x295/ffffff/666666/?text=TV" alt="${serie.show.name}"/>
         </li>`;
       }
-    html+=`</li>`
+    html+=`</li>`   
+    }
+
     return html;
 }
 
@@ -122,7 +141,7 @@ for (const item of allSeries) {
 //FUNCIÓN PARA BORRAR TODAS LAS FAVORITAS
 function handleCLickDelete(){
     seriesFav = [];
-    localStorage.removeItem('seriesFav');
+    localStorage.removeItem('favorites');
     renderSerieFav(seriesFav);
 }
 
